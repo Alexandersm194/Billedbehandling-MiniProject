@@ -13,7 +13,7 @@ matchTemp1 = cv2.matchTemplate(inputImage, crownTemp1, cv2.TM_CCOEFF_NORMED)
 matchTemp2 = cv2.matchTemplate(inputImage, crownTemp2, cv2.TM_CCOEFF_NORMED)
 matchTemp3 = cv2.matchTemplate(inputImage, crownTemp3, cv2.TM_CCOEFF_NORMED)
 
-thres = 0
+thres = 0.6
 
 _, threshold = cv2.threshold(matchTemp, thres, 1, cv2.THRESH_BINARY)
 _, threshold1 = cv2.threshold(matchTemp1, thres, 1, cv2.THRESH_BINARY)
