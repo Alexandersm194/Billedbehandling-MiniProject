@@ -1,6 +1,5 @@
 import cv2
 import os
-
 import numpy as np
 
 
@@ -26,7 +25,7 @@ def calculate_hue_hist(image):
     hue_channel = hsv_image[:, :, 0]
     return cv2.calcHist([hue_channel], [0], None, [255], [0, 255])
 
-
+#Assigning values to each type op brick on the board found, so forest = 0, Stone = 1 ect.
 areaBrickDict = {"forestProb.jpg" : 0,
                   "GreyProb.jpg" : 1,
                   "MineProb.jpg" : 2,
