@@ -35,6 +35,10 @@ areaBrickDict = {"forestProb.jpg" : 0,
                   "YellowProb.jpg" : 5,
                   }
 
+brickDict = {"BrickType" : np.uint8(0),
+             "Crowns" : np.uint8(0),
+             "checked" : False}
+
 image = cv2.imread("King Domino dataset//Cropped and perspective corrected boards//1.jpg")
 
 kernel_size_x = image.shape[0] // 5
@@ -48,7 +52,11 @@ preImages = []
 fileNames = []
 brickTypes = []
 
-matrix = np.zeros((5, 5), np.int8)
+#matrix = np.zeros((5, 5), dtype=type(brickDict))
+matrix = np.empty((5, 5), dtype=object)
+for i in range(5):
+    for j in range(5):
+        matrix[i, j] = brickDict.copy()
 
 for y in range(5):
     for x in range(5):
@@ -93,7 +101,8 @@ croppedImgIndex = 0
 for i in range(matrix.shape[0]):
     for j in range(matrix.shape[1]):
         var = areaBrickDict.get(brickTypes[croppedImgIndex])
-        matrix[i, j] = var
+        matrix[i, j]["BrickType"] = var
+        matrix[i, j]["Crowns"] = 0
         croppedImgIndex += 1
 
 print(matrix)
