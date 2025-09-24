@@ -30,24 +30,9 @@ contours1, _ = cv2.findContours(addImg1, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIM
 
 contours2, _ = cv2.findContours(addImg1, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-h1, w1 = matchTemp.shape[:2]
-h2, w2 = matchTemp1.shape[:2]
-centers = []
 
 print(f"{len(contours1)} and {len(contours2)}")
 
-for cnt in contours1:
-    x, y, bw, bh = cv2.boundingRect(cnt)
-    center = (x + bw // 2 + w1 // 2, y + bh // 2 + h1 // 2)
-    centers.append(center)
-
-for cnt in contours2:
-    x, y, bw, bh = cv2.boundingRect(cnt)
-    center = (x + bw // 2 + w2 // 2, y + bh // 2 + h2 // 2)
-    centers.append(center)
-
-
-print("Centers found:", len(centers))
 
 cv2.imshow("Image", addImg1)
 cv2.imshow("Image 2", addImg2)
