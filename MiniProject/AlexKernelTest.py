@@ -39,6 +39,9 @@ brickDict = {"BrickType" : np.uint8(0),
              "Crowns" : np.uint8(0),
              "checked" : False}
 
+propertyDict = {"BrickType" : "",
+                "Count" : np.uint8(0)}
+
 image = cv2.imread("King Domino dataset//Cropped and perspective corrected boards//1.jpg")
 
 kernel_size_x = image.shape[0] // 5
@@ -102,11 +105,48 @@ for i in range(matrix.shape[0]):
     for j in range(matrix.shape[1]):
         var = areaBrickDict.get(brickTypes[croppedImgIndex])
         matrix[i, j]["BrickType"] = var
-        matrix[i, j]["Crowns"] = 0
         croppedImgIndex += 1
 
 print(matrix)
 
+
+def dfs(matrix, x, y, BrickType, in_count):
+    # Check boundary conditions and color match
+    if (x < 0 or x >= 5 or y < 0 or
+            y >= 5 or matrix[y, x]["checked"] == True or matrix[y, x]["BrickType"] != BrickType):
+        return in_count
+
+    matrix[y, x]["checked"] = True
+
+    in_count = in_count + 1
+
+    # Visit all adjacent pixels
+    in_count = dfs(matrix, x + 1, y, BrickType, in_count)
+    in_count = dfs(matrix, x - 1, y, BrickType, in_count)
+    in_count = dfs(matrix, x, y + 1, BrickType, in_count)
+    in_count = dfs(matrix, x, y - 1, BrickType, in_count)
+
+
+    return in_count
+
+
+properties = []
+
+for y in range(matrix.shape[0]):
+    for x in range(matrix.shape[1]):
+        if not matrix[y, x]["checked"]:
+            brickType = matrix[y, x]["BrickType"]
+            count = dfs(matrix, x, y, brickType, 0)
+            matrix[y, x]["checked"] = True
+
+            prop = propertyDict.copy()
+            prop["BrickType"] = brickType
+            prop["Count"] = count
+            properties.append(prop)
+
+
+print(matrix)
+print(properties)
 cv2.imshow("image", image)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
