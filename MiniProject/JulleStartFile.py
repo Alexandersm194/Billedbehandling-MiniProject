@@ -2,14 +2,15 @@ import cv2
 import matplotlib.pyplot as plt
 from cv2 import waitKey, destroyAllWindows
 from matplotlib.testing.compare import crop_to_same
+import numpy as np
 
 img = cv2.imread("King Domino dataset/Cropped and perspective corrected boards/1.jpg")
 
 kernelSizeX = img.shape[0] // 5
 kernelSizeY = img.shape[1] // 5
 
-
-
+max = np.matrix((5,5))
+print(max)
 
 
 '''cv2.imshow("Original", img)'''
