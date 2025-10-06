@@ -1,44 +1,23 @@
 import cv2
-import cv2 as cv
-import numpy as np
-import imutils
 
-img_rgb = cv2.imread('mainimage.jpg').
+img = cv2.imread("King Domino dataset//Cropped and perspective corrected boards//test.png")
+crownTemp = cv2.imread("Templates//CrownTemp.jpg")
 
-# Convert it to grayscale
-img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
+rotated = cv2.rotate(crownTemp, cv2.ROTATE_180)
 
-# Read the template
-template = cv2.imread('template', 0)
-
-# Store width and height of template in w and h
-w, h = template.shape[::-1]
-
-# Resize the image according to scale and
-# keeping track of ratio of resizing
-resize = imutils.resize(img_gray, width=int(shape[0]), height=int(img_gray.shape[1]*scale)
-
-# If resize image is smaller than that of template
-# break the loop
-# Detect edges in the resized, grayscale image and apply template
-# Matching to find the template in image edged
-# If we have found a new maximum correlation value, update
-# the found variable if
-# found = null/maxVal > found][0]
-if resized.shape[0] < h or resized.shape[1] < w:
-          break
-found=(maxVal, maxLoc, r)
-
-# Unpack the found variables and compute(x,y) coordinates
-# of the bounding box
-(__, maxLoc, r)=found
-(startX, startY)=(int(maxLoc[0]*r), int maxLoc[1]*r)
-(endX, endY)=(int((maxLoc[0]+tw)*r), int(maxLoc[1]+tH)*r)
-
-# Draw a bounding box around the detected result and display the image
-cv2.rectangle(image, (startX, startY), (endX, endY), (0, 0, 255), 2)
-cv2.imshow("Image", image)
+cv2.imshow("180 Clockwise", rotated)
 cv2.waitKey(0)
-cv2.waitKey(0)
-
 cv2.destroyAllWindows()
+
+
+
+'''img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+ret, thresh = cv2.threshold(img, 127, 255, 0)
+contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+cnt = contours[4]
+cv2.drawContours(img, [cnt], 0, (0, 255, 0), 3)
+
+cv2.imshow("InputImage", img)
+cv2.waitKey(0)
+cv2.destroyAllWindows()'''
