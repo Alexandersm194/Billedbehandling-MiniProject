@@ -1,9 +1,8 @@
 import random
-
+import AlexStartFile as crownFinder
 import cv2
 import os
 import numpy as np
-
 
 def input_image_folder():
     imageDir = "AreaBricks"
@@ -45,7 +44,7 @@ propertyDict = {"BrickType": "",
                 "Count": np.uint8(0),
                 "Crowns": np.uint8(0)}
 
-image = cv2.imread("King Domino dataset//Cropped and perspective corrected boards//1.jpg")
+image = cv2.imread("King Domino dataset//Cropped and perspective corrected boards//9.jpg")
 
 kernel_size_x = image.shape[0] // 5
 kernel_size_y = image.shape[1] // 5
@@ -100,19 +99,29 @@ for croppedImage in croppedImages:
             comparisonVar = cor
             wonImage = i
 
-    brickTypes.append(fileNames[wonImage])
+    if comparisonVar > 0.55:
+        brickTypes.append(fileNames[wonImage])
+        print(f"Won image: {wonImage}")
+    else:
+        brickTypes.append(None)
+        print("No Won image")
+
 
 croppedImgIndex = 0
 for i in range(matrix.shape[0]):
     for j in range(matrix.shape[1]):
-        var = areaBrickDict.get(brickTypes[croppedImgIndex])
+        if brickTypes[croppedImgIndex] is None:
+            var = -1
+        else:
+            var = areaBrickDict.get(brickTypes[croppedImgIndex])
+
         matrix[i, j]["BrickType"] = var
         matrix[i, j]["ImageID"] = croppedImgIndex
         croppedImgIndex += 1
 
 
 def calculate_crowns_per_square(ImageID):
-    return random.randint(0, 2)
+    return crownFinder.testFunction(croppedImages[ImageID])
 
 
 def dfs(matrix, x, y, BrickType, in_count, crowns):
@@ -140,7 +149,7 @@ properties = []
 
 for y in range(matrix.shape[0]):
     for x in range(matrix.shape[1]):
-        if not matrix[y, x]["checked"]:
+        if not matrix[y, x]["checked"] and matrix[y, x]["BrickType"] != -1:
             brickType = matrix[y, x]["BrickType"]
             count, crowns = dfs(matrix, x, y, brickType, 0, 0)
             matrix[y, x]["checked"] = True
@@ -161,6 +170,7 @@ def calculate_final_score():
 
 
 print(properties)
+print(len(properties))
 cv2.imshow("image", image)
 print(f"The final score is: {calculate_final_score()}")
 
