@@ -1,23 +1,28 @@
 import cv2
 
-img = cv2.imread("King Domino dataset//Cropped and perspective corrected boards//test.png")
-crownTemp = cv2.imread("Templates//CrownTemp.jpg")
+from matplotlib import pyplot as plt
 
-rotated = cv2.rotate(crownTemp, cv2.ROTATE_180)
+#load image
+#img = cv2.imread("Templates/CrownTemp3.jpg")
 
-cv2.imshow("180 Clockwise", rotated)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+def crownEdges(img):
+    gray_image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    canny_edges = cv2.Canny(gray_image, 195, 200)
+    return canny_edges
 
+'''
+#calculating moments of image
+M = cv2.moments(canny_edges)
+#calculating x y coordinates of the center
+cx = int(M['m10']/M['m00'])
+cy = int(M['m01']/M['m00'])
 
-
-'''img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-ret, thresh = cv2.threshold(img, 127, 255, 0)
-contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
-cnt = contours[4]
-cv2.drawContours(img, [cnt], 0, (0, 255, 0), 3)
-
-cv2.imshow("InputImage", img)
-cv2.waitKey(0)
-cv2.destroyAllWindows()'''
+# show result
+fig = plt.figure(figsize = (100,100))
+plt.imshow(canny_edges)
+plt.xticks([])
+plt.yticks([])
+plt.show()
+print(cx, cy)
+#cv2.imshow("Canny Edges", gray_image)
+#cv2.waitKey(0)'''
