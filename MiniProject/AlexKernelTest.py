@@ -3,9 +3,10 @@ import CrownFinding as crownFinder
 import cv2
 import os
 import numpy as np
+import EvaluationScript as eval
 
 def input_image_folder():
-    imageDir = "AreaBricks"
+    imageDir = "GroundTruth//BrickTruthImg"
 
     if os.path.isdir(imageDir):
         for file in os.listdir(imageDir):
@@ -98,13 +99,13 @@ for croppedImage in croppedImages:
         elif cor > comparisonVar:
             comparisonVar = cor
             wonImage = i
-
-    if comparisonVar > 0.55:
+    brickTypes.append(fileNames[wonImage])
+    '''if comparisonVar > 0.55:
         brickTypes.append(fileNames[wonImage])
         print(f"Won image: {wonImage}")
     else:
         brickTypes.append(None)
-        print("No Won image")
+        print("No Won image")'''
 
 
 croppedImgIndex = 0
@@ -172,6 +173,8 @@ print(properties)
 print(len(properties))
 cv2.imshow("image", image)
 print(f"The final score is: {calculate_final_score()}")
+
+print(eval.evaluate(matrix))
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()

@@ -23,16 +23,22 @@ brick_index = {
 crown_confusion_matrix = [["", "Crown found", "Crown not found"],
                           ["Crown", 0, 0],
                           ["No Crown", 0, 0]]
+groundtruth = []
+
+with open("GroundTruth//BrickGroundTruth.txt") as f:
+  for x in f:
+    groundtruth.append(x)
 
 def evaluate(programMatrix):
     programResults = []
     for i, row in enumerate(programMatrix):
         for j, img in enumerate(row):
-            programResults.append(img[i, j]["BrickType"])
+            programResults.append(programMatrix[i,j]["BrickType"])
 
-    for i, truth in enumerate(groundtruth):
-        if truth == programResults[i]:
-            brick_confusion_matrix[programResults[i]][truth] += 1
+    print(len(programResults))
+    for x, truth in enumerate(groundtruth):
+        if truth == programResults[x]:
+            brick_confusion_matrix[programResults[x]][truth] += 1
 
 
     return brick_confusion_matrix

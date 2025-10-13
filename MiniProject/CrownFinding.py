@@ -29,9 +29,6 @@ def crownEdges(img):
         finalImage = (threshold * 255).astype(np.uint8)
         contours, _ = cv2.findContours(finalImage, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         nrOfCrowns += len(contours)
-    cv2.imshow("Crown Edges", canny_edges)
-    cv2.imshow("Crown Temps", crownTempsEdges[0])
-    cv2.waitKey(0)
     return nrOfCrowns
 
 
