@@ -4,9 +4,12 @@ import cv2
 import os
 import numpy as np
 import EvaluationScript as eval
+import ImageSlicer as slice
+import HistComparison as hist
+import MatrixCreator as matrix
 
 def input_image_folder():
-    imageDir = "GroundTruth//BrickTruthImg"
+    imageDir = "AreaBricks"
 
     if os.path.isdir(imageDir):
         for file in os.listdir(imageDir):
@@ -23,18 +26,15 @@ def input_image_folder():
         input_image_folder()
 
 
-def calculate_hue_hist(image):
-    hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    hue_channel = hsv_image[:, :, 0]
-    return cv2.calcHist([hue_channel], [0], None, [255], [0, 255])
 
 
-areaBrickDict = {"forestProb.jpg": 0,
-                  "GreyProb.jpg": 1,
-                  "MineProb.jpg": 2,
-                  "planeProb.jpg": 3,
-                  "WaterProb.jpg": 4,
-                  "YellowProb.jpg": 5}
+areaBrickDict = {"forest": 0,
+                  "swamp": 1,
+                  "mine": 2,
+                  "grassplane": 3,
+                  "lake": 4,
+                  "wheat": 5,
+                 "unknown": 6}
 
 brickDict = {"BrickType": np.uint8(0),
              "Crowns": np.uint8(0),
@@ -47,6 +47,7 @@ propertyDict = {"BrickType": "",
 
 image = cv2.imread("King Domino dataset/FullBoardsTestData/9.jpg")
 
+
 kernel_size_x = image.shape[0] // 5
 kernel_size_y = image.shape[1] // 5
 
@@ -58,48 +59,15 @@ preImages = []
 fileNames = []
 brickTypes = []
 
-#matrix = np.zeros((5, 5), dtype=type(brickDict))
-matrix = np.empty((5, 5), dtype=object)
-for i in range(5):
-    for j in range(5):
-        matrix[i, j] = brickDict.copy()
 
-for y in range(5):
-    for x in range(5):
-        pixelValues = [0, 0]
-        if(y == 0 and x == 0):
-            pixelValues = [kernel_radius_y, kernel_radius_x]
-            croppedImages.append(image[0:kernel_size_y, 0:kernel_size_x])
-        elif(y == 0 and x != 0):
-            pixelValues = [kernel_radius_y, kernel_radius_x + kernel_size_x * x]
-            croppedImages.append(image[0:kernel_size_y, kernel_size_x * x:kernel_size_x * x + kernel_size_x])
-        elif(y != 0 and x == 0):
-            pixelValues = [kernel_radius_y + kernel_size_y * y, kernel_radius_x]
-            croppedImages.append(image[kernel_size_y * y:kernel_size_y * y + kernel_size_y, 0:kernel_size_x])
-        elif(y != 0 and x != 0):
-            pixelValues = [kernel_radius_y + kernel_size_y * y, kernel_radius_x + kernel_size_x * x]
-            croppedImages.append(image[kernel_size_y * y:kernel_size_y * y + kernel_size_y, kernel_size_x * x:kernel_size_x * x + kernel_size_x])
+croppedImages = slice.slice_image(image)
 
+print(len(croppedImages))
 
 input_image_folder()
 
 for croppedImage in croppedImages:
-    comparisonVar = 0
-    wonImage = 0
-    comparisonMethod = 0
-
-    croppedHist = calculate_hue_hist(croppedImage)
-    for i, compareImage in enumerate(preImages):
-        comparedHist = calculate_hue_hist(compareImage)
-        cor = cv2.compareHist(croppedHist, comparedHist, comparisonMethod)
-
-        if i == 0:
-            comparisonVar = cor
-
-        elif cor > comparisonVar:
-            comparisonVar = cor
-            wonImage = i
-    brickTypes.append(fileNames[wonImage])
+    brickTypes.append(hist.classify_brick(croppedImage))
     '''if comparisonVar > 0.55:
         brickTypes.append(fileNames[wonImage])
         print(f"Won image: {wonImage}")
@@ -107,18 +75,8 @@ for croppedImage in croppedImages:
         brickTypes.append(None)
         print("No Won image")'''
 
+matrix = matrix.createMatrix(brickDict, brickTypes, areaBrickDict)
 
-croppedImgIndex = 0
-for i in range(matrix.shape[0]):
-    for j in range(matrix.shape[1]):
-        if brickTypes[croppedImgIndex] is None:
-            var = -1
-        else:
-            var = areaBrickDict.get(brickTypes[croppedImgIndex])
-
-        matrix[i, j]["BrickType"] = var
-        matrix[i, j]["ImageID"] = croppedImgIndex
-        croppedImgIndex += 1
 
 
 def calculate_crowns_per_square(ImageID):
@@ -174,7 +132,7 @@ print(len(properties))
 cv2.imshow("image", image)
 print(f"The final score is: {calculate_final_score()}")
 
-print(eval.evaluate(matrix))
+#print(eval.evaluate(matrix))
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
