@@ -1,5 +1,5 @@
 import random
-import AlexStartFile as crownFinder
+import CrownFinding as crownFinder
 import cv2
 import os
 import numpy as np
@@ -121,7 +121,7 @@ for i in range(matrix.shape[0]):
 
 
 def calculate_crowns_per_square(ImageID):
-    return crownFinder.testFunction(croppedImages[ImageID])
+    return crownFinder.crownEdges(croppedImages[ImageID])
 
 
 def dfs(matrix, x, y, BrickType, in_count, crowns):
@@ -167,7 +167,6 @@ def calculate_final_score():
         final_score += prop["Count"] * prop["Crowns"]
 
     return final_score
-
 
 print(properties)
 print(len(properties))
