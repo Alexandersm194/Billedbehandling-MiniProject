@@ -44,7 +44,7 @@ propertyDict = {"BrickType": "",
                 "Count": np.uint8(0),
                 "Crowns": np.uint8(0)}
 
-image = cv2.imread("King Domino dataset//Cropped and perspective corrected boards//9.jpg")
+image = cv2.imread("King Domino dataset/FullBoardsTestData/9.jpg")
 
 kernel_size_x = image.shape[0] // 5
 kernel_size_y = image.shape[1] // 5
