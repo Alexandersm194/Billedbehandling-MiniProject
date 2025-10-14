@@ -80,7 +80,8 @@ matrix = matrix.createMatrix(brickDict, brickTypes, areaBrickDict)
 
 
 def calculate_crowns_per_square(ImageID):
-    return crownFinder.crownEdges(croppedImages[ImageID])
+    return crownFinder.crownFinder(croppedImages[ImageID])
+    #crownFinder.crownEdges(croppedImages[ImageID])
 
 
 def dfs(matrix, x, y, BrickType, in_count, crowns):
@@ -120,7 +121,7 @@ for y in range(matrix.shape[0]):
             properties.append(prop)
 
 
-def calculate_final_score():
+def calculate_final_score(properties):
     final_score = 0
     for prop in properties:
         final_score += prop["Count"] * prop["Crowns"]
@@ -130,7 +131,7 @@ def calculate_final_score():
 print(properties)
 print(len(properties))
 cv2.imshow("image", image)
-print(f"The final score is: {calculate_final_score()}")
+print(f"The final score is: {calculate_final_score(properties)}")
 
 #print(eval.evaluate(matrix))
 

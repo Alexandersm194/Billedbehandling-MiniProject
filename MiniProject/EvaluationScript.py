@@ -97,12 +97,7 @@ for boards in testBoards:
     brickTypes = []
     for croppedImage in croppedImages:
         brickTypes.append(hist.classify_brick(croppedImage))
-        '''if comparisonVar > 0.55:
-            brickTypes.append(fileNames[wonImage])
-            print(f"Won image: {wonImage}")
-        else:
-            brickTypes.append(None)
-            print("No Won image")'''
+
 
     matrixes.append(matrix.createMatrix(brickDict, brickTypes, areaBrickDict))
 
