@@ -7,6 +7,7 @@ import EvaluationScript as eval
 import ImageSlicer as slice
 import HistComparison as hist
 import MatrixCreator as matrix
+import CrownFinding as crownFinder
 
 imageDir = "GroundTruth//BrickTruthImg"
 testBoards = []
@@ -57,12 +58,17 @@ crown_confusion_matrix = [["", "Crown found", "Crown not found"],
                           ["Crown", 0, 0],
                           ["No Crown", 0, 0]]
 groundtruth = []
+groundtruth_crowns = []
 
 with open("GroundTruth//BrickGroundTruth.txt") as f:
   for x in f:
     groundtruth.append(f"{x.replace(f"\n", "")}")
 
+with open("GroundTruth//CrownGroundTruth.txt") as f:
+    for x in f:
+      groundtruth_crowns.append(int(x))
 
+print(groundtruth_crowns)
 def system_precision_recall(confMat):
     confMat = np.array(confMat)
 
@@ -94,13 +100,14 @@ def evaluate(programMatrixes):
 
 matrixes = []
 
+crowns = 0
 for boards in testBoards:
     croppedImages = slice.slice_image(boards)
 
     brickTypes = []
     for croppedImage in croppedImages:
         brickTypes.append(hist.classify_brick(croppedImage))
-
+        crowns += crownFinder.crownEdges(croppedImage)
 
     matrixes.append(matrix.createMatrix(brickDict, brickTypes, areaBrickDict))
 
@@ -110,3 +117,4 @@ precision, recall = system_precision_recall(confBrick)
 print(confBrick)
 print(precision)
 print(recall)
+print(crowns)
