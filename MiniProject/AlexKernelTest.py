@@ -47,7 +47,12 @@ propertyDict = {"BrickType": "",
                 "Count": np.uint8(0),
                 "Crowns": np.uint8(0)}
 
-image = cv2.imread("King Domino dataset/FullBoardsTestData/9.jpg")
+image = cv2.imread("King Domino dataset/FullBoardsTestData/65.jpg")
+
+'''alpha = 2
+# control brightness by 50
+beta = 0
+image = cv2.convertScaleAbs(imageRaw, alpha=alpha, beta=beta)'''
 
 
 kernel_size_x = image.shape[0] // 5

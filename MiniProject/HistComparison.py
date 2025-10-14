@@ -2,24 +2,6 @@ import cv2
 import numpy as np
 import os
 
-preImages = []
-fileNames = []
-
-imageDir = "AreaBricks"
-
-if os.path.isdir(imageDir):
-    for file in os.listdir(imageDir):
-        full_path = os.path.join(imageDir, file)
-        img = cv2.imread(full_path)
-        if img is None:
-            print(f"Could not load image: {full_path}")
-        else:
-            print(f"Image loaded successfully: {full_path}")
-            preImages.append(img)
-            fileNames.append(file)
-else:
-    print("This is not a funtional path!")
-
 def stuff(dir):
     array = []
     if os.path.isdir(dir):
