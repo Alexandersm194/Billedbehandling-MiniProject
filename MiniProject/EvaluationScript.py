@@ -3,7 +3,6 @@ import CrownFinding as crownFinder
 import cv2
 import os
 import numpy as np
-import EvaluationScript as eval
 import ImageSlicer as slice
 import HistComparison as hist
 import MatrixCreator as matrix
@@ -27,6 +26,9 @@ else:
 
 labels = ["forest", "grasslands", "wheat", "swamp", "mine", "lake", "unknown"]
 brick_confusion_matrix = np.zeros((len(labels), len(labels)), dtype=int)
+
+labels_crown = ["Detected", "Non detected"]
+crown_confusion_matrix = np.zeros((len(labels_crown), len(labels_crown)), dtype=int)
 
 brick_index = {
     "forest": 0,
@@ -54,11 +56,9 @@ brickDict = {"BrickType": np.uint8(0),
              "checked": False,
              "ImageID": np.uint8(0)}
 
-crown_confusion_matrix = [["", "Crown found", "Crown not found"],
-                          ["Crown", 0, 0],
-                          ["No Crown", 0, 0]]
 groundtruth = []
 groundtruth_crowns = []
+allCroppedImages = []
 
 with open("GroundTruth//BrickGroundTruth.txt") as f:
   for x in f:
@@ -87,16 +87,30 @@ def system_precision_recall(confMat):
 def evaluate(programMatrixes):
     programResults = []
     confusMat = brick_confusion_matrix.copy()
+    confusMatCrowns = crown_confusion_matrix.copy()
+    var = 0
     for mat in programMatrixes:
         for i, row in enumerate(mat):
             for j, img in enumerate(row):
                 programResults.append(mat[i, j]["BrickType"])
+                crownsFound = crownFinder.crownEdges(allCroppedImages[var])
+                if crownsFound < groundtruth_crowns[var]:
+                    confusMatCrowns[0, 1] += (groundtruth_crowns[var] - crownsFound)
+                    confusMatCrowns[0, 0] += crownsFound
+                elif crownsFound > groundtruth_crowns[var]:
+                    confusMatCrowns[1, 0] += (crownsFound - groundtruth_crowns[var])
+                    confusMatCrowns[0, 0] += (crownsFound - (crownsFound - groundtruth_crowns[var]))
+                elif crownsFound == groundtruth_crowns[var]:
+                    if crownsFound != 0:
+                        confusMatCrowns[0, 0] += crownsFound
+
+                var += 1
 
     for x, truth in enumerate(groundtruth):
         confusMat[brick_index[programResults[x]], brick_index[truth]] += 1
 
 
-    return confusMat
+    return confusMat, confusMatCrowns
 
 matrixes = []
 
@@ -106,15 +120,26 @@ for boards in testBoards:
 
     brickTypes = []
     for croppedImage in croppedImages:
+        allCroppedImages.append(croppedImage)
         brickTypes.append(hist.classify_brick(croppedImage))
         crowns += crownFinder.crownEdges(croppedImage)
 
     matrixes.append(matrix.createMatrix(brickDict, brickTypes, areaBrickDict))
 
 
-confBrick = evaluate(matrixes)
+confBrick, confCrown = evaluate(matrixes)
+
+
 precision, recall = system_precision_recall(confBrick)
 print(confBrick)
+print(confCrown)
 print(precision)
 print(recall)
 print(crowns)
+
+totalCrowns = 0
+
+for crowns in groundtruth_crowns:
+    totalCrowns += crowns
+
+print(totalCrowns)

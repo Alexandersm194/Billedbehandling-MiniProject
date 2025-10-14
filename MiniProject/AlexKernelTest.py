@@ -3,7 +3,6 @@ import CrownFinding as crownFinder
 import cv2
 import os
 import numpy as np
-import EvaluationScript as eval
 import ImageSlicer as slice
 import HistComparison as hist
 import MatrixCreator as matrix
