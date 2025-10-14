@@ -1,5 +1,6 @@
 import cv2
 import os
+import ImageSlicer as slicer
 
 fullBoards = []
 croppedImages = []
@@ -22,6 +23,10 @@ def input_image_folder():
 
 input_image_folder()
 
+for fullBoard in fullBoards:
+    for croppedImage in slicer.slice_image(fullBoard):
+        croppedImages.append(croppedImage)
+
 
 label_keys = {
     ord('f'): 'forest',
@@ -33,14 +38,37 @@ label_keys = {
     ord('u'): 'unknown'
 }
 
-crown_keys = {
-    ord('0'): 0,
-    ord('1'): 1,
-    ord('2'): 2,
-    ord('3'): 3,
+labelVariables = {
+    "forest": 0,
+    "grasslands": 0,
+    "wheat": 0,
+    "swamp": 0,
+    "mine": 0,
+    "lake": 0,
+    "unknown": 0
 }
 
-for img in fullBoards:
+var = 0
+for croppedImage in croppedImages:
+    cv2.imshow("Cropped Image", croppedImage)
+    key = cv2.waitKey(0)
+
+    label = label_keys[key]
+
+    cv2.imwrite(f'dataset/{label}/tile_{label}_{labelVariables[label]}.jpg', croppedImage)
+    labelVariables[label] = labelVariables[label] + 1
+
+
+
+
+
+
+
+
+
+
+
+'''for img in fullBoards:
     ROWS, COLS = 5, 5
     cell_height = img.shape[0] // ROWS
     cell_width = img.shape[1] // COLS
@@ -60,7 +88,7 @@ for img in fullBoards:
                         f.write(f"{crown_keys[crowns]}\n")
 
             elif key == 27:  # ESC for at stoppe
-                break
+                break'''
 
 
 cv2.destroyAllWindows()
