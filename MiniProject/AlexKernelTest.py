@@ -28,15 +28,17 @@ def input_image_folder():
 
 
 
-areaBrickDict = {"forest": 0,
+'''areaBrickDict = {"forest": 0,
                   "swamp": 1,
                   "mine": 2,
                   "grassplane": 3,
                   "lake": 4,
                   "wheat": 5,
-                 "unknown": 6}
+                 "unknown": 6}'''
 
-brickDict = {"BrickType": np.uint8(0),
+areaBrickDict = ["forest", "grassplane", "lake", "mine", "swamp", "wheat", "unknown"]
+
+brickDict = {"BrickType": str,
              "Crowns": np.uint8(0),
              "checked": False,
              "ImageID": np.uint8(0)}
@@ -80,8 +82,8 @@ matrix = matrix.createMatrix(brickDict, brickTypes, areaBrickDict)
 
 
 def calculate_crowns_per_square(ImageID):
-    return crownFinder.crownFinder(croppedImages[ImageID])
-    #crownFinder.crownEdges(croppedImages[ImageID])
+    #return crownFinder.crownFinder(croppedImages[ImageID])
+    return crownFinder.crownEdges(croppedImages[ImageID])
 
 
 def dfs(matrix, x, y, BrickType, in_count, crowns):
@@ -109,7 +111,7 @@ properties = []
 
 for y in range(matrix.shape[0]):
     for x in range(matrix.shape[1]):
-        if not matrix[y, x]["checked"] and matrix[y, x]["BrickType"] != -1:
+        if not matrix[y, x]["checked"] : #and matrix[y, x]["BrickType"] != -1
             brickType = matrix[y, x]["BrickType"]
             count, crowns = dfs(matrix, x, y, brickType, 0, 0)
             matrix[y, x]["checked"] = True
@@ -133,7 +135,6 @@ print(len(properties))
 cv2.imshow("image", image)
 print(f"The final score is: {calculate_final_score(properties)}")
 
-#print(eval.evaluate(matrix))
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()

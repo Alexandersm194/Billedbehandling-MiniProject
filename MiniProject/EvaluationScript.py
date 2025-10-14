@@ -28,22 +28,25 @@ labels = ["forest", "grasslands", "wheat", "swamp", "mine", "lake", "unknown"]
 brick_confusion_matrix = np.zeros((len(labels), len(labels)), dtype=int)
 
 brick_index = {
-    "forest": 1,
-    "grasslands": 2,
-    "wheat": 3,
-    "swamp": 4,
-    "mine": 5,
-    "lake": 6,
-    "unknown": 7
+    "forest": 0,
+    "grassplane": 1,
+    "wheat": 2,
+    "swamp": 3,
+    "mine": 4,
+    "lake": 5,
+    "unknown": 6
 }
 
-areaBrickDict = {"forest": 0,
+'''areaBrickDict = {"forest": 0,
                   "swamp": 1,
                   "mine": 2,
                   "grassplane": 3,
                   "lake": 4,
                   "wheat": 5,
-                 "unknown": 6}
+                 "unknown": 6}'''
+areaBrickDict = ["forest", "grassplane", "lake", "mine", "swamp", "wheat", "unknown"]
+
+areaBrickIndex = ["forest", "grasslands", "wheat", "mine", "lake", "unknown"]
 
 brickDict = {"BrickType": np.uint8(0),
              "Crowns": np.uint8(0),
@@ -84,7 +87,7 @@ def evaluate(programMatrixes):
                 programResults.append(mat[i, j]["BrickType"])
 
     for x, truth in enumerate(groundtruth):
-        confusMat[programResults[x]][areaBrickDict[truth]] += 1
+        confusMat[brick_index[programResults[x]], brick_index[truth]] += 1
 
 
     return confusMat
