@@ -20,11 +20,11 @@ for crown in crownTemps:
 def crownEdges(img):
     nrOfCrowns = 0
     gray_image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    canny_edges = cv2.Canny(gray_image, 195, 200)
+    canny_edges = cv2.Canny(img, 195, 200)
 
     for crownTemp in crownTempsEdges:
         matchTemp = cv2.matchTemplate(canny_edges, crownTemp, cv2.TM_CCOEFF_NORMED)
-        thres = 0.4
+        thres = 0.25
         _, threshold = cv2.threshold(matchTemp, thres, 1, cv2.THRESH_BINARY)
         finalImage = (threshold * 255).astype(np.uint8)
         contours, _ = cv2.findContours(finalImage, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
