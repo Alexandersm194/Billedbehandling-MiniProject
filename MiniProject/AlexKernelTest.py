@@ -52,7 +52,7 @@ image = cv2.imread("King Domino dataset/FullBoardsTestData/65.jpg")
 # control brightness by 50
 beta = 0
 image = cv2.convertScaleAbs(imageRaw, alpha=alpha, beta=beta)'''
-
+#;
 
 kernel_size_x = image.shape[0] // 5
 kernel_size_y = image.shape[1] // 5
