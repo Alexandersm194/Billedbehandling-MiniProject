@@ -115,8 +115,8 @@ for boards in testBoards:
     for croppedImage in croppedImages:
         allCroppedImages.append(croppedImage)
         tileTypes.append(hist.classify_tile(croppedImage))
-        nrOfCrowns.append(crownFinder.crownEdges(croppedImage))
-        crowns += crownFinder.crownEdges(croppedImage)
+        nrOfCrowns.append(crownFinder.find_crowns(croppedImage))
+        crowns += crownFinder.find_crowns(croppedImage)
 
     matrixes.append(matrix.createMatrix(tileTypes, nrOfCrowns))
 

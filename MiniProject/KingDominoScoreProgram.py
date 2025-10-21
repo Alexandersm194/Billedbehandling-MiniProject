@@ -19,7 +19,7 @@ croppedImages = slice.slice_image(image)
 
 for croppedImage in croppedImages:
     tileTypes.append(tc.classify_tile(croppedImage))
-    numberOfCrowns.append(cf.crownEdges(croppedImage))
+    numberOfCrowns.append(cf.find_crowns(croppedImage))
 
 full_board_matrix = matrix.createMatrix(tileTypes, numberOfCrowns)
 

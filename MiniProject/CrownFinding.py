@@ -1,10 +1,6 @@
 import cv2
 import numpy as np
 
-from matplotlib import pyplot as plt
-
-#load image
-#img = cv2.imread("Templates/CrownTemp3.jpg")
 crownTemps = [
     cv2.imread("Templates//CrownTemp.jpg"),
     cv2.imread("Templates//CrownTemp1.jpg"),
@@ -16,9 +12,8 @@ crownTempsEdges = []
 for crown in crownTemps:
     crownTempsEdges.append(cv2.Canny(crown, 195, 200))
 
-def crownEdges(img):
+def find_crowns(img):
     nrOfCrowns = 0
-    gray_image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     canny_edges = cv2.Canny(img, 195, 200)
 
     for crownTemp in crownTempsEdges:

@@ -1,7 +1,3 @@
-import cv2
-import numpy as np
-
-
 def slice_image(orgImage):
     kernel_size_x = orgImage.shape[0] // 5
     kernel_size_y = orgImage.shape[1] // 5
