@@ -8,25 +8,28 @@ import TileClassifier as tc
 import MatrixCreator as matrix
 import ScoreCalculator as sc
 
+def KingDominoScore(image):
+    #image = cv2.imread("King Domino dataset/FullBoardsTestData/65.jpg")
 
-image = cv2.imread("King Domino dataset/FullBoardsTestData/65.jpg")
+    #croppedImages = []
+    tileTypes = []
+    numberOfCrowns = []
+    croppedImages = slice.slice_image(image)
 
-croppedImages = []
-tileTypes = []
-numberOfCrowns = []
+    for croppedImage in croppedImages:
+        tileTypes.append(tc.classify_tile(croppedImage))
+        numberOfCrowns.append(cf.find_crowns(croppedImage))
 
-croppedImages = slice.slice_image(image)
+    full_board_matrix = matrix.createMatrix(tileTypes, numberOfCrowns)
 
-for croppedImage in croppedImages:
-    tileTypes.append(tc.classify_tile(croppedImage))
-    numberOfCrowns.append(cf.find_crowns(croppedImage))
+    final_score = sc.counter(full_board_matrix)
 
-full_board_matrix = matrix.createMatrix(tileTypes, numberOfCrowns)
+    '''cv2.imshow("image", image)
+    print(f"The final score is: {final_score}")
 
-final_score = sc.counter(full_board_matrix)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()'''
+    return final_score
 
-cv2.imshow("image", image)
-print(f"The final score is: {final_score}")
+#KingDominoScore(cv2.imread("King Domino dataset/FullBoardsTestData/65.jpg"))
 
-cv2.waitKey(0)
-cv2.destroyAllWindows()

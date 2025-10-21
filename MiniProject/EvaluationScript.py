@@ -1,3 +1,4 @@
+import math
 import random
 import CrownFinding as crownFinder
 import cv2
@@ -7,6 +8,7 @@ import ImageSlicer as slice
 import TileClassifier as hist
 import MatrixCreator as matrix
 import CrownFinding as crownFinder
+import KingDominoScoreProgram as main
 
 imageDir = "GroundTruth//BrickTruthImg"
 testBoards = []
@@ -51,6 +53,7 @@ tileDict = {"TileType": np.uint8(0),
 
 groundtruth_tiles = []
 groundtruth_crowns = []
+groundtruth_score = []
 allCroppedImages = []
 
 with open("GroundTruth//BrickGroundTruth.txt") as f:
@@ -60,6 +63,10 @@ with open("GroundTruth//BrickGroundTruth.txt") as f:
 with open("GroundTruth//CrownGroundTruth.txt") as f:
     for x in f:
       groundtruth_crowns.append(int(x))
+
+with open("GroundTruth//ScoreGroundTruth.txt") as f:
+    for x in f:
+        groundtruth_score.append(int(x))
 
 def system_precision_recall(confMat):
     confMat = np.array(confMat)
@@ -105,6 +112,21 @@ def evaluate(programMatrixes):
     return confusMat, confusMatCrowns
 
 matrixes = []
+
+
+overall_error_rate = 0
+
+for i, score in enumerate(groundtruth_score):
+    programScore = main.KingDominoScore(testBoards[i])
+    variance = math.pow((score - programScore), 2)
+    errorRate = math.sqrt(variance) / score
+    overall_error_rate += errorRate
+    print(f"Program score: {programScore} ; Real Score: {score}")
+    print(f"Board {i} have an error rate of {errorRate}")
+
+average_error_rate = overall_error_rate/len(groundtruth_score)
+
+print(f"Average Error Rate is {average_error_rate}")
 
 crowns = 0
 for boards in testBoards:

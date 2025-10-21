@@ -28,8 +28,8 @@ def calculate_final_score(properties):
 
     return final_score
 
-properties = []
 def counter(matrix):
+    properties = []
     for y in range(matrix.shape[0]):
         for x in range(matrix.shape[1]):
             if not matrix[y, x]["checked"]:
@@ -43,6 +43,6 @@ def counter(matrix):
                 prop["Crowns"] = crowns
                 properties.append(prop)
 
-    print(properties)
+    #print(properties)
     return calculate_final_score(properties)
 
