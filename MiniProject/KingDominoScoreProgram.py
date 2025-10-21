@@ -7,33 +7,6 @@ import ImageSlicer as slice
 import HistComparison as hist
 import MatrixCreator as matrix
 
-def input_image_folder():
-    imageDir = "AreaBricks"
-
-    if os.path.isdir(imageDir):
-        for file in os.listdir(imageDir):
-            full_path = os.path.join(imageDir, file)
-            img = cv2.imread(full_path)
-            if img is None:
-                print(f"Could not load image: {full_path}")
-            else:
-                print(f"Image loaded successfully: {full_path}")
-                preImages.append(img)
-                fileNames.append(file)
-    else:
-        print("This is not a funtional path!")
-        input_image_folder()
-
-
-
-
-'''areaBrickDict = {"forest": 0,
-                  "swamp": 1,
-                  "mine": 2,
-                  "grassplane": 3,
-                  "lake": 4,
-                  "wheat": 5,
-                 "unknown": 6}'''
 
 areaBrickDict = ["forest", "grassplane", "lake", "mine", "swamp", "wheat", "unknown"]
 
@@ -61,32 +34,21 @@ kernel_radius_x = kernel_size_x // 2
 kernel_radius_y = kernel_size_y // 2
 
 croppedImages = []
-preImages = []
-fileNames = []
 brickTypes = []
 
 
 croppedImages = slice.slice_image(image)
 
-print(len(croppedImages))
-
-input_image_folder()
+#input_image_folder()
 
 for croppedImage in croppedImages:
     brickTypes.append(hist.classify_brick(croppedImage))
-    '''if comparisonVar > 0.55:
-        brickTypes.append(fileNames[wonImage])
-        print(f"Won image: {wonImage}")
-    else:
-        brickTypes.append(None)
-        print("No Won image")'''
 
 matrix = matrix.createMatrix(brickDict, brickTypes, areaBrickDict)
 
 
 
 def calculate_crowns_per_square(ImageID):
-    #return crownFinder.crownFinder(croppedImages[ImageID])
     return crownFinder.crownEdges(croppedImages[ImageID])
 
 
