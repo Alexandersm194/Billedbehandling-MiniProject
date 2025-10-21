@@ -85,7 +85,7 @@ def evaluate(programMatrixes):
         for i, row in enumerate(mat):
             for j, img in enumerate(row):
                 programResults.append(mat[i, j]["TileType"])
-                crownsFound = crownFinder.crownEdges(allCroppedImages[var])
+                crownsFound = crownFinder.find_crowns(allCroppedImages[var])
                 if crownsFound < groundtruth_crowns[var]:
                     confusMatCrowns[0, 1] += (groundtruth_crowns[var] - crownsFound)
                     confusMatCrowns[0, 0] += crownsFound
@@ -97,7 +97,7 @@ def evaluate(programMatrixes):
                         confusMatCrowns[0, 0] += crownsFound
 
                 var += 1
-
+    print(len(programResults))
     for x, truth in enumerate(groundtruth_tiles):
         confusMat[tile_index[programResults[x]], tile_index[truth]] += 1
 
