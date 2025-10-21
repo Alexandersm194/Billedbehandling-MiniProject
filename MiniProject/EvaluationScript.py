@@ -68,7 +68,6 @@ with open("GroundTruth//CrownGroundTruth.txt") as f:
     for x in f:
       groundtruth_crowns.append(int(x))
 
-print(groundtruth_crowns)
 def system_precision_recall(confMat):
     confMat = np.array(confMat)
 

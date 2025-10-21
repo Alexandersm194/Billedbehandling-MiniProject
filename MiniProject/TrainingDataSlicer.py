@@ -59,36 +59,4 @@ for croppedImage in croppedImages:
     labelVariables[label] = labelVariables[label] + 1
 
 
-
-
-
-
-
-
-
-
-
-'''for img in fullBoards:
-    ROWS, COLS = 5, 5
-    cell_height = img.shape[0] // ROWS
-    cell_width = img.shape[1] // COLS
-
-    for y in range(ROWS):
-        for x in range(COLS):
-            tile = img[y*cell_height:(y+1)*cell_height, x*cell_width:(x+1)*cell_width]
-            cv2.imshow("Label tile", tile)
-            key = cv2.waitKey(0)
-            if key in label_keys:
-                label = label_keys[key]
-                os.makedirs(f'dataset/{label}', exist_ok=True)
-                cv2.imwrite(f'dataset/{label}/tile_{y}_{x}.jpg', tile)
-                crowns = cv2.waitKey(0)
-                if crowns in crown_keys:
-                    with open(f"TrainingInfo//{label}.txt", "a") as f:
-                        f.write(f"{crown_keys[crowns]}\n")
-
-            elif key == 27:  # ESC for at stoppe
-                break'''
-
-
 cv2.destroyAllWindows()
