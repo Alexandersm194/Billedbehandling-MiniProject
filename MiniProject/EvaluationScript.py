@@ -4,7 +4,7 @@ import cv2
 import os
 import numpy as np
 import ImageSlicer as slice
-import HistComparison as hist
+import TileClassifier as hist
 import MatrixCreator as matrix
 import CrownFinding as crownFinder
 
@@ -25,12 +25,12 @@ else:
 
 
 labels = ["forest", "grasslands", "wheat", "swamp", "mine", "lake", "unknown"]
-brick_confusion_matrix = np.zeros((len(labels), len(labels)), dtype=int)
+tile_confusion_matrix = np.zeros((len(labels), len(labels)), dtype=int)
 
 labels_crown = ["Detected", "Non detected"]
 crown_confusion_matrix = np.zeros((len(labels_crown), len(labels_crown)), dtype=int)
 
-brick_index = {
+tile_index = {
     "forest": 0,
     "grassplane": 1,
     "wheat": 2,
@@ -40,29 +40,22 @@ brick_index = {
     "unknown": 6
 }
 
-'''areaBrickDict = {"forest": 0,
-                  "swamp": 1,
-                  "mine": 2,
-                  "grassplane": 3,
-                  "lake": 4,
-                  "wheat": 5,
-                 "unknown": 6}'''
-areaBrickDict = ["forest", "grassplane", "lake", "mine", "swamp", "wheat", "unknown"]
+areaTileDict = ["forest", "grassplane", "lake", "mine", "swamp", "wheat", "unknown"]
 
-areaBrickIndex = ["forest", "grasslands", "wheat", "mine", "lake", "unknown"]
+areaTileIndex = ["forest", "grasslands", "wheat", "mine", "lake", "unknown"]
 
-brickDict = {"BrickType": np.uint8(0),
+tileDict = {"TileType": np.uint8(0),
              "Crowns": np.uint8(0),
              "checked": False,
              "ImageID": np.uint8(0)}
 
-groundtruth = []
+groundtruth_tiles = []
 groundtruth_crowns = []
 allCroppedImages = []
 
 with open("GroundTruth//BrickGroundTruth.txt") as f:
   for x in f:
-    groundtruth.append(f"{x.replace(f"\n", "")}")
+    groundtruth_tiles.append(f"{x.replace(f"\n", "")}")
 
 with open("GroundTruth//CrownGroundTruth.txt") as f:
     for x in f:
@@ -85,13 +78,13 @@ def system_precision_recall(confMat):
     return precision, recall
 def evaluate(programMatrixes):
     programResults = []
-    confusMat = brick_confusion_matrix.copy()
+    confusMat = tile_confusion_matrix.copy()
     confusMatCrowns = crown_confusion_matrix.copy()
     var = 0
     for mat in programMatrixes:
         for i, row in enumerate(mat):
             for j, img in enumerate(row):
-                programResults.append(mat[i, j]["BrickType"])
+                programResults.append(mat[i, j]["TileType"])
                 crownsFound = crownFinder.crownEdges(allCroppedImages[var])
                 if crownsFound < groundtruth_crowns[var]:
                     confusMatCrowns[0, 1] += (groundtruth_crowns[var] - crownsFound)
@@ -105,8 +98,8 @@ def evaluate(programMatrixes):
 
                 var += 1
 
-    for x, truth in enumerate(groundtruth):
-        confusMat[brick_index[programResults[x]], brick_index[truth]] += 1
+    for x, truth in enumerate(groundtruth_tiles):
+        confusMat[tile_index[programResults[x]], tile_index[truth]] += 1
 
 
     return confusMat, confusMatCrowns
@@ -117,20 +110,22 @@ crowns = 0
 for boards in testBoards:
     croppedImages = slice.slice_image(boards)
 
-    brickTypes = []
+    tileTypes = []
+    nrOfCrowns = []
     for croppedImage in croppedImages:
         allCroppedImages.append(croppedImage)
-        brickTypes.append(hist.classify_brick(croppedImage))
+        tileTypes.append(hist.classify_tile(croppedImage))
+        nrOfCrowns.append(crownFinder.crownEdges(croppedImage))
         crowns += crownFinder.crownEdges(croppedImage)
 
-    matrixes.append(matrix.createMatrix(brickDict, brickTypes, areaBrickDict))
+    matrixes.append(matrix.createMatrix(tileTypes, nrOfCrowns))
 
 
-confBrick, confCrown = evaluate(matrixes)
+confTile, confCrown = evaluate(matrixes)
 
 
-precision, recall = system_precision_recall(confBrick)
-print(confBrick)
+precision, recall = system_precision_recall(confTile)
+print(confTile)
 print(confCrown)
 print(precision)
 print(recall)

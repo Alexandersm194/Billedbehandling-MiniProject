@@ -30,32 +30,3 @@ def crownEdges(img):
         nrOfCrowns += len(contours)
 
     return nrOfCrowns
-
-def crownFinder(img):
-    nrOfCrowns = 0
-    gray_image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-    for crownTemp in crownTemps:
-        matchTemp = cv2.matchTemplate(gray_image, crownTemp, cv2.TM_CCOEFF_NORMED)
-        thres = 0.5
-        _, threshold = cv2.threshold(matchTemp, thres, 1, cv2.THRESH_BINARY)
-        finalImage = (threshold * 255).astype(np.uint8)
-        contours, _ = cv2.findContours(finalImage, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        nrOfCrowns += len(contours)
-    return nrOfCrowns
-'''
-#calculating moments of image
-M = cv2.moments(canny_edges)
-#calculating x y coordinates of the center
-cx = int(M['m10']/M['m00'])
-cy = int(M['m01']/M['m00'])
-
-# show result
-fig = plt.figure(figsize = (100,100))
-plt.imshow(canny_edges)
-plt.xticks([])
-plt.yticks([])
-plt.show()
-print(cx, cy)
-#cv2.imshow("Canny Edges", gray_image)
-#cv2.waitKey(0)'''
