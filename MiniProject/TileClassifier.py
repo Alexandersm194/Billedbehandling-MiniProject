@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import os
+import matplotlib.pyplot as plt
 
 def input_trainingdata(dir):
     array = []
@@ -31,7 +32,10 @@ trainingDataGroups = {
 
 def calculate_hue_hist(image):
     hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    cv2.imshow("HSV image", hsv_image)
     hue_channel = hsv_image[:, :, 0]
+    cv2.imshow("Hue channel", hue_channel)
+    cv2.waitKey(0)
     return cv2.calcHist([hue_channel], [0], None, [255], [0, 255])
 
 
