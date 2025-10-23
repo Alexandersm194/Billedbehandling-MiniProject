@@ -36,19 +36,19 @@ def calculate_hue_hist(image):
 
 
 def classify_tile(orgImage):
-    comparisonVar = float("inf")
+    compVar = float("inf")
     predictType = 0
-    comparisonMethod = cv2.HISTCMP_CHISQR
+    compMethod = cv2.HISTCMP_CHISQR
 
     croppedHist = calculate_hue_hist(orgImage)
 
     for i, type in enumerate(tileType):
-        for compareImg in trainingDataGroups[type]:
-            comparedHist = calculate_hue_hist(compareImg)
-            dist = cv2.compareHist(croppedHist, comparedHist, comparisonMethod)
+        for compImg in trainingDataGroups[type]:
+            compHist = calculate_hue_hist(compImg)
+            dist = cv2.compareHist(croppedHist, compHist, compMethod)
 
-            if dist < comparisonVar:
-                comparisonVar = dist
+            if dist < compVar:
+                compVar = dist
                 predictType = i
 
     return tileType[predictType]

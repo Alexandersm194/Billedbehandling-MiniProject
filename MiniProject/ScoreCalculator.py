@@ -43,6 +43,5 @@ def counter(matrix):
                 prop["Crowns"] = crowns
                 properties.append(prop)
 
-    #print(properties)
     return calculate_final_score(properties)
 

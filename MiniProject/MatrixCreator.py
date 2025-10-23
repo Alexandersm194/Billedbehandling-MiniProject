@@ -16,6 +16,7 @@ def createMatrix(tileTypes, nrOfCrowns):
 
             if tileTypes[croppedImgIndex] is None:
                 tile_var = ""
+                crown_var = 0
             else:
                 tile_var = tileTypes[croppedImgIndex]
                 crown_var = nrOfCrowns[croppedImgIndex]
