@@ -17,12 +17,6 @@ def input_trainingdata(dir):
     return array
 
 
-def calculate_hue_hist(image):
-    hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    hue_channel = hsv_image[:, :, 0]
-    return cv2.calcHist([hue_channel], [0], None, [255], [0, 255])
-
-
 tileType = ["forest", "grassplane", "lake", "mine", "swamp", "wheat", "unknown"]
 
 trainingDataGroups = {
@@ -44,6 +38,12 @@ trainingDataGroupsHist = {
     "wheat": [],
     "unknown": []
 }
+
+def calculate_hue_hist(image):
+    hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    hue_channel = hsv_image[:, :, 0]
+    return cv2.calcHist([hue_channel], [0], None, [255], [0, 255])
+
 
 for type in tileType:
     for i, compareImg in enumerate(trainingDataGroups[type]):
