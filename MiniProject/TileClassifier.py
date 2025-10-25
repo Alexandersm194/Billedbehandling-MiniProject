@@ -3,7 +3,6 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 
-
 def input_trainingdata(dir):
     array = []
     if os.path.isdir(dir):
@@ -13,7 +12,7 @@ def input_trainingdata(dir):
             if img is not None:
                 array.append(img)
     else:
-        print("This is not a funtional path!")
+        print("This is not a functional path!")
 
     return array
 
