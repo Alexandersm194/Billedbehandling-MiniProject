@@ -8,18 +8,10 @@ crownTemps = [
     cv2.imread("Templates//CrownTemp3.jpg")
 ]
 
-def sharpen(orgimg):
-    blur = cv2.blur(orgimg, (23, 23))
-    median = cv2.medianBlur(orgimg, 23)
-
-    gaussian_blur = cv2.GaussianBlur(orgimg, (23, 23), 0)
-    # adding the two pictures together with larger weight on the original image :D
-    return cv2.addWeighted(orgimg, 1.7, blur, -0.8, 0)
 
 crownTempsEdges = []
 
 for crown in crownTemps:
-    sharpenImg = sharpen(crown)
     edge = cv2.Canny(crown, 195, 200)
     crownTempsEdges.append(edge)
 
