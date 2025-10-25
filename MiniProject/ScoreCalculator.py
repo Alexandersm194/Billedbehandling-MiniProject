@@ -3,6 +3,8 @@ import numpy as np
 propertyDict = {"TileType": "",
                 "Count": np.uint8(0),
                 "Crowns": np.uint8(0)}
+
+
 def dfs(matrix, x, y, TileType, in_count, crowns):
     if (x < 0 or x >= 5 or y < 0 or y >= 5 or matrix[y, x]["checked"] == True
             or matrix[y, x]["TileType"] != TileType):

@@ -124,13 +124,11 @@ for boards in testBoards:
 
     matrixes.append(matrix.createMatrix(tileTypes, nrOfCrowns))
 
-
 confTile, confCrown = evaluate(matrixes)
 
 
 print(confTile)
 print(confCrown)
-
 print(crowns)
 
 totalCrowns = 0

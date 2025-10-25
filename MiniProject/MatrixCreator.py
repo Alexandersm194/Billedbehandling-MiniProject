@@ -4,6 +4,7 @@ tileDict = {"TileType": str,
              "Crowns": np.uint8(0),
              "checked": False,
              "ImageID": np.uint8(0)}
+
 def createMatrix(tileTypes, nrOfCrowns):
     matrix = np.empty((5, 5), dtype=object)
     for i in range(5):

@@ -11,7 +11,6 @@ def KingDominoScore(image):
     blur = cv2.blur(image, (23, 23))
     sharpened_img_org = cv2.addWeighted(image, 1.7, blur, -0.8, 0)
 
-
     croppedImages = slice.slice_image(sharpened_img_org)
 
     for croppedImage in croppedImages:
