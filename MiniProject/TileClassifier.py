@@ -65,7 +65,7 @@ def classify_tile(orgImage):
     for i, type in enumerate(tileType):
         for compareImg in trainingDataGroupsHist[type]:
             #comparedHist = calculate_hue_hist(compareImg)
-            dist = cv2.compareHist(croppedHist, compareImg, comparisonMethod)
+            dist = cv2.compareHist(croppedHist, compareImg, compMethod)
 
             if dist < compVar:
                 compVar = dist

@@ -9,7 +9,7 @@ crownTemps = [
 ]
 
 def sharpen(orgimg):
-    blur = cv2.blur(orgimg, (13, 13))
+    blur = cv2.blur(orgimg, (23, 23))
     median = cv2.medianBlur(orgimg, 23)
 
     gaussian_blur = cv2.GaussianBlur(orgimg, (23, 23), 0)
@@ -44,7 +44,5 @@ def find_crowns(img):
         cv2.imshow(f"match{f}", matchTemp)
         cv2.imshow(f"final{f}", finalImage)
         f = f + 1
-
-
 
     return nrOfCrowns
