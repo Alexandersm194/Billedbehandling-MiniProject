@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import os
+import matplotlib.pyplot as plt
 
 
 def input_trainingdata(dir):
@@ -55,9 +56,9 @@ for type in tileType:
 
 
 def classify_tile(orgImage):
-    comparisonVar = float("inf")
+    compVar = float("inf")
     predictType = 0
-    comparisonMethod = cv2.HISTCMP_CHISQR
+    compMethod = cv2.HISTCMP_CHISQR
 
     croppedHist = calculate_hue_hist(orgImage)
 
@@ -66,8 +67,8 @@ def classify_tile(orgImage):
             #comparedHist = calculate_hue_hist(compareImg)
             dist = cv2.compareHist(croppedHist, compareImg, comparisonMethod)
 
-            if dist < comparisonVar:
-                comparisonVar = dist
+            if dist < compVar:
+                compVar = dist
                 predictType = i
 
     return tileType[predictType]

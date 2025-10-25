@@ -26,7 +26,12 @@ for crown in crownTemps:
 def find_crowns(img):
     nrOfCrowns = 0
     canny_edges = cv2.Canny(img, 195, 200)
-
+    cv2.imshow("Canny edges", canny_edges)
+    i = 0
+    for crown in crownTemps:
+        cv2.imshow(f"CrownTemp{i}", crown)
+        i = i + 1
+    f = 0
     for crownTemp in crownTempsEdges:
         matchTemp = cv2.matchTemplate(canny_edges, crownTemp, cv2.TM_CCOEFF_NORMED)
         thres = 0.22
@@ -35,6 +40,11 @@ def find_crowns(img):
         finalImage = (threshold * 255).astype(np.uint8)
         contours, _ = cv2.findContours(finalImage, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         nrOfCrowns += len(contours)
+        cv2.imshow(f"CrownEdge{f}", crownTemp)
+        cv2.imshow(f"match{f}", matchTemp)
+        cv2.imshow(f"final{f}", finalImage)
+        f = f + 1
+
 
 
     return nrOfCrowns
