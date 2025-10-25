@@ -1,6 +1,4 @@
 import math
-import random
-import CrownFinding as crownFinder
 import cv2
 import os
 import numpy as np
@@ -27,10 +25,10 @@ else:
 
 
 labels = ["forest", "grasslands", "wheat", "swamp", "mine", "lake", "unknown"]
-tile_confusion_matrix = np.zeros((len(labels), len(labels)), dtype=int)
+tile_confusion_matrix = np.zeros((len(labels), len(labels)), int)
 
 labels_crown = ["Detected", "Non detected"]
-crown_confusion_matrix = np.zeros((len(labels_crown), len(labels_crown)), dtype=int)
+crown_confusion_matrix = np.zeros((len(labels_crown), len(labels_crown)), int)
 
 tile_index = {
     "forest": 0,
@@ -42,9 +40,6 @@ tile_index = {
     "unknown": 6
 }
 
-areaTileDict = ["forest", "grassplane", "lake", "mine", "swamp", "wheat", "unknown"]
-
-areaTileIndex = ["forest", "grasslands", "wheat", "mine", "lake", "unknown"]
 
 tileDict = {"TileType": np.uint8(0),
              "Crowns": np.uint8(0),
@@ -68,21 +63,6 @@ with open("GroundTruth//ScoreGroundTruth.txt") as f:
     for x in f:
         groundtruth_score.append(int(x))
 
-def system_precision_recall(confMat):
-    confMat = np.array(confMat)
-
-    if isinstance(confMat[0][0], str):
-        confMat = confMat[1:, 1:].astype(int)
-
-    TP = np.trace(confMat)
-    total_predicted = np.sum(confMat)
-    FP = total_predicted - TP
-    FN = FP
-
-    precision = TP / (TP + FP) if (TP + FP) > 0 else 0
-    recall = TP / (TP + FN) if (TP + FN) > 0 else 0
-
-    return precision, recall
 def evaluate(programMatrixes):
     programResults = []
     confusMat = tile_confusion_matrix.copy()
@@ -130,7 +110,10 @@ print(f"Average Error Rate is {average_error_rate}")
 
 crowns = 0
 for boards in testBoards:
-    croppedImages = slice.slice_image(boards)
+    blur = cv2.blur(boards, (23, 23))
+    sharpened_img_org = cv2.addWeighted(boards, 1.7, blur, -0.8, 0)
+
+    croppedImages = slice.slice_image(sharpened_img_org)
 
     tileTypes = []
     nrOfCrowns = []
@@ -146,11 +129,9 @@ for boards in testBoards:
 confTile, confCrown = evaluate(matrixes)
 
 
-precision, recall = system_precision_recall(confTile)
 print(confTile)
 print(confCrown)
-print(precision)
-print(recall)
+
 print(crowns)
 
 totalCrowns = 0

@@ -9,12 +9,14 @@ import MatrixCreator as matrix
 import ScoreCalculator as sc
 
 def KingDominoScore(image):
-    #image = cv2.imread("King Domino dataset/FullBoardsTestData/65.jpg")
-
-    #croppedImages = []
     tileTypes = []
     numberOfCrowns = []
-    croppedImages = slice.slice_image(image)
+    gaussian_blur = cv2.GaussianBlur(image, (23, 23), 0)
+    blur = cv2.blur(image, (23, 23))
+    sharpened_img_org = cv2.addWeighted(image, 1.7, blur, -0.8, 0)
+
+
+    croppedImages = slice.slice_image(sharpened_img_org)
 
     for croppedImage in croppedImages:
         tileTypes.append(tc.classify_tile(croppedImage))
@@ -31,5 +33,5 @@ def KingDominoScore(image):
     cv2.destroyAllWindows()'''
     return final_score
 
-#KingDominoScore(cv2.imread("King Domino dataset/FullBoardsTestData/65.jpg"))
-
+'''KingDominoScore(cv2.imread("GroundTruth/BrickTruthImg/71.jpg"))
+'''

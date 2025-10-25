@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import os
 
+
 def input_trainingdata(dir):
     array = []
     if os.path.isdir(dir):
@@ -15,6 +16,13 @@ def input_trainingdata(dir):
 
     return array
 
+
+def calculate_hue_hist(image):
+    hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    hue_channel = hsv_image[:, :, 0]
+    return cv2.calcHist([hue_channel], [0], None, [255], [0, 255])
+
+
 tileType = ["forest", "grassplane", "lake", "mine", "swamp", "wheat", "unknown"]
 
 trainingDataGroups = {
@@ -27,12 +35,23 @@ trainingDataGroups = {
     "unknown": input_trainingdata("dataset//unknown")
 }
 
+trainingDataGroupsHist = {
+    "forest": [],
+    "grassplane": [],
+    "lake": [],
+    "mine": [],
+    "swamp": [],
+    "wheat": [],
+    "unknown": []
+}
 
-
-def calculate_hue_hist(image):
-    hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    hue_channel = hsv_image[:, :, 0]
-    return cv2.calcHist([hue_channel], [0], None, [255], [0, 255])
+for type in tileType:
+    for i, compareImg in enumerate(trainingDataGroups[type]):
+        blur = cv2.blur(compareImg, (23, 23))
+        gaussian_blur = cv2.GaussianBlur(compareImg, (23, 23), 0)
+        # adding the two pictures together with larger weight on the original image :D
+        sharpenedImage = cv2.addWeighted(compareImg, 1.7, blur, -0.8, 0)
+        trainingDataGroupsHist[type].append(calculate_hue_hist(sharpenedImage))
 
 
 def classify_tile(orgImage):
@@ -43,9 +62,9 @@ def classify_tile(orgImage):
     croppedHist = calculate_hue_hist(orgImage)
 
     for i, type in enumerate(tileType):
-        for compareImg in trainingDataGroups[type]:
-            comparedHist = calculate_hue_hist(compareImg)
-            dist = cv2.compareHist(croppedHist, comparedHist, comparisonMethod)
+        for compareImg in trainingDataGroupsHist[type]:
+            #comparedHist = calculate_hue_hist(compareImg)
+            dist = cv2.compareHist(croppedHist, compareImg, comparisonMethod)
 
             if dist < comparisonVar:
                 comparisonVar = dist
