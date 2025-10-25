@@ -6,8 +6,10 @@ import matplotlib.pyplot as plt
 
 
 image = cv2.imread("King Domino dataset/FullBoardsTestData/70.jpg")
-cv2.imshow("image", image)
-slicedImages = ImageSlicer.slice_image(image)
+blur = cv2.blur(image, (23, 23))
+sharpened_img_org = cv2.addWeighted(image, 1.7, blur, -0.8, 0)
+cv2.imshow("image", sharpened_img_org)
+slicedImages = ImageSlicer.slice_image(sharpened_img_org)
 
 Crowns = CrownFinding.find_crowns(slicedImages[5])
 
