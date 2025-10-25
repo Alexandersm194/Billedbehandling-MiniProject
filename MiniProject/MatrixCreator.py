@@ -28,3 +28,4 @@ def createMatrix(tileTypes, nrOfCrowns):
             croppedImgIndex += 1
 
     return matrix
+

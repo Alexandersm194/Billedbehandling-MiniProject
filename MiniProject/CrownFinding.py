@@ -5,8 +5,7 @@ crownTemps = [
     cv2.imread("Templates//CrownTemp.jpg"),
     cv2.imread("Templates//CrownTemp1.jpg"),
     cv2.imread("Templates//CrownTemp2.jpg"),
-    cv2.imread("Templates//CrownTemp3.jpg")
-]
+    cv2.imread("Templates//CrownTemp3.jpg")]
 
 crownTempsEdges = []
 
@@ -27,3 +26,5 @@ def find_crowns(img):
         nrOfCrowns += len(contours)
 
     return nrOfCrowns
+
+
