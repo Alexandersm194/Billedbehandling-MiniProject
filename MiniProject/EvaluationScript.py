@@ -93,7 +93,6 @@ def evaluate(programMatrixes):
 
 matrixes = []
 
-
 overall_error_rate = 0
 
 for i, score in enumerate(groundtruth_score):

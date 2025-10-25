@@ -49,8 +49,6 @@ trainingDataGroupsHist = {
 for type in tileType:
     for i, compareImg in enumerate(trainingDataGroups[type]):
         blur = cv2.blur(compareImg, (23, 23))
-        gaussian_blur = cv2.GaussianBlur(compareImg, (23, 23), 0)
-        # adding the two pictures together with larger weight on the original image :D
         sharpenedImage = cv2.addWeighted(compareImg, 1.7, blur, -0.8, 0)
         trainingDataGroupsHist[type].append(calculate_hue_hist(sharpenedImage))
 
@@ -64,7 +62,6 @@ def classify_tile(orgImage):
 
     for i, type in enumerate(tileType):
         for compareImg in trainingDataGroupsHist[type]:
-            #comparedHist = calculate_hue_hist(compareImg)
             dist = cv2.compareHist(croppedHist, compareImg, compMethod)
 
             if dist < compVar:
